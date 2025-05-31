@@ -50,6 +50,7 @@
         <div class="container navbar-container">
             <a class="navbar-brand me-4 {{ request()->is('admin') ? 'active' : '' }}" href="/admin">Thống kê</a>
             <a class="navbar-brand me-4 {{ request()->is('admin/products*') ? 'active' : '' }}" href="/admin/products">Sản phẩm</a>
+            <a class="navbar-brand me-4 {{ request()->is('admin/categories*') ? 'active' : '' }}" href="/admin/categories">Danh mục</a>
             <a class="navbar-brand {{ request()->is('admin/orders*') ? 'active' : '' }}" href="/admin/orders">Đơn hàng</a>
 
         </div>
@@ -57,6 +58,28 @@
 
 
     <div class="container">
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Thành công!</strong> {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Lỗi!</strong> {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                    @foreach ($errors->all() as $error)
+                        <div>{{ $error }}</div>
+                    @endforeach
+            </div>
+        @endif
+
         @yield('content')
     </div>
 

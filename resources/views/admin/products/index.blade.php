@@ -3,20 +3,6 @@
 @section('title', 'Danh sách sản phẩm')
 
 @section('content')
-
-@if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>Thành công!</strong> {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-@endif
-
-@if(session('error'))
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <strong>Lỗi!</strong> {{ session('error') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-@endif
 <div class="mb-3 d-flex justify-content-between align-items-center">
     <h3>Danh sách sản phẩm</h3>
     <a href="{{ route('admin.products.create') }}" class="btn btn-primary">
@@ -30,6 +16,7 @@
             <th>STT</th>
             <th style="width: 120px">Ảnh</th>
             <th>Tên sản phẩm</th>
+            <th>Danh mục</th>
             <th>Giá</th>
             <th>Thao tác</th>
         </tr>
@@ -52,6 +39,7 @@
             </td>
 
             <td>{{ $product->name }}</td>
+            <td>{{$product->category->name??'Chưa có'}}</td>
             <td>{{ number_format($product->price, 0, ',', '.') }} ₫</td>
             <td>
                 <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-sm btn-info me-1">
@@ -68,6 +56,11 @@
             </td>
         </tr>
         @endforeach
+        @if($products->isEmpty())
+            <tr>
+                <td colspan='6' class='text-center'>Hiện chưa có sản phẩm nào</td>
+            </tr>
+        @endif
     </tbody>
 </table>
 
