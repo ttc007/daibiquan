@@ -3,20 +3,6 @@
 @section('title', 'Danh sách sản phẩm')
 
 @section('content')
-
-@if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>Thành công!</strong> {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-@endif
-
-@if(session('error'))
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <strong>Lỗi!</strong> {{ session('error') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-@endif
 <div class="mb-3 d-flex justify-content-between align-items-center">
     <h3>Danh sách sản phẩm</h3>
     <a href="{{ route('admin.products.create') }}" class="btn btn-primary">
@@ -24,12 +10,27 @@
     </a>
 </div>
 
+<div class="mb-3">
+    <a href="{{ route('admin.products.index') }}" class="btn btn-secondary btn-sm {{ !isset($category) ? 'active' : '' }}">
+        Tất cả
+    </a>
+
+    @foreach ($categories as $cat)
+        <a href="{{ route('admin.products.byCategory', $cat->id) }}"
+           class="btn btn-outline-primary btn-sm {{ isset($category) && $category->id == $cat->id ? 'active' : '' }}">
+            {{ $cat->name }}
+        </a>
+    @endforeach
+</div>
+
+
 <table class="table table-bordered table-striped">
     <thead class="table-dark">
         <tr>
             <th>STT</th>
             <th style="width: 120px">Ảnh</th>
             <th>Tên sản phẩm</th>
+            <th>Danh mục</th>
             <th>Giá</th>
             <th>Thao tác</th>
         </tr>
@@ -52,10 +53,11 @@
             </td>
 
             <td>{{ $product->name }}</td>
+            <td>{{$product->category->name??'Chưa có'}}</td>
             <td>{{ number_format($product->price, 0, ',', '.') }} ₫</td>
             <td>
                 <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-sm btn-info me-1">
-                    <i class="bi bi-pencil"></i> Sửa
+                    <i class="bi bi-pencil"></i> Cập nhật
                 </a>
                 <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" class="d-inline"
                       onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">
@@ -68,9 +70,16 @@
             </td>
         </tr>
         @endforeach
+        @if($products->isEmpty())
+            <tr>
+                <td colspan='6' class='text-center'>Hiện chưa có sản phẩm nào</td>
+            </tr>
+        @endif
     </tbody>
 </table>
 
-{{ $products->links() }}
+<div class="pagination">
+    {{ $products->links('vendor.pagination.bootstrap-5') }}
+</div>
 
 @endsection
