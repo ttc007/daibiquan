@@ -19,6 +19,17 @@
             justify-content: flex-end; /* Đẩy nội dung bên phải */
             margin-top: 20px; /* Cách phần trên */
         }
+
+        .input-group .quantity-input {
+            border: 1px solid #ced4da; /* giống màu border của button */
+            border-left: 0;
+            border-right: 0;
+        }
+
+        .input-group .btn-outline-secondary {
+            border-color: #ced4da;
+        }
+
     </style>
     <h1>Giỏ hàng</h1>
 
@@ -43,7 +54,7 @@
                             <td width="80">
                                 @if($item['image'])
                                     <div class="product-image">
-                                        <img src="{{ asset($item['image']) }}" width="60">
+                                        <img src="{{ asset($item['image']) }}">
                                     </div>
                                 @else
                                     <div class="product-image">
@@ -55,13 +66,18 @@
                             <td>{{ number_format($item['price'], 0, ',', '.') }}đ</td>
                             <td>
                             <div class="d-flex align-items-center">
-                                <a href="{{ route('cart.decrease', $id) }}" class="btn btn-sm btn-outline-secondary me-2">-</a>
-                                <form action="{{ route('cart.update', $id) }}" method="POST" style="display:inline;">
+                                <div class="input-group input-group-sm" style="width: 82px;">
+                                    <a type="button" class="btn btn-outline-secondary btn-sm"  href="{{ route('cart.decrease', $id) }}">−</a>
+                                    <input type="text" name="quantity" value="{{$item['quantity']}}" min="1" class="form-control text-center quantity-input" data="{{$id}}"/>
+                                    <a type="button" class="btn btn-outline-secondary btn-sm" href="{{ route('cart.increase', $id) }}">+</a>
+                                </div>
+                                
+                                <form action="{{ route('cart.update', $id) }}" method="POST" style="display:inline;" id="form{{$id}}">
                                     @csrf
-                                    <input type="number" name="quantity" value="{{ $item['quantity'] }}" min="1" style="width:60px; text-align:center;" />
-                                    <button type="submit" class="btn btn-sm btn-success ms-2 btn-green">Cập nhật</button>
+                                    <input type="hidden" name="quantity" value="{{ $item['quantity'] }}" min="1" style="width:60px; text-align:center;" id="input{{$id}}"/>
+                                    
                                 </form>
-                                <a href="{{ route('cart.increase', $id) }}" class="btn btn-sm btn-outline-secondary ms-2">+</a>
+                                
                             </div>
                         </td>
                             <td>{{ number_format($subtotal, 0, ',', '.') }}đ</td>
@@ -103,4 +119,26 @@
             </tbody>
         </table>
     @endif
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const inputs = document.querySelectorAll('.quantity-input');
+
+            inputs.forEach(input => {
+                let id = input.getAttribute('data');
+                input.addEventListener('change', function () {
+                    const form = document.getElementById('form' + id);
+                    const inputQuantity = document.getElementById('input' + id);
+                    if (inputQuantity) {
+                        inputQuantity.value = input.value; // lấy giá trị mới người dùng nhập
+                    }
+                    if (form) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
+
 @endsection

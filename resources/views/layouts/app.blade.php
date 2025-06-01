@@ -107,6 +107,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #7cb342;">
         <div class="container">
             <a class="navbar-brand" href="/">Đại Bi Quán</a>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -119,7 +120,7 @@
                     <li class="nav-item">
                         <a class="nav-link {{ request()->is('menu') ? 'active' : '' }}" href="/menu">Sản phẩm</a>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link d-flex align-items-center {{ request()->is('cart') ? 'active' : '' }}" href="{{ route('cart.index') }}">
                             @php
                                 $cart = session('cart', []);
@@ -129,7 +130,7 @@
                             @if($totalQuantity > 0)<span class="badge bg-success">{{ $totalQuantity }}</span>
                             @endif
                         </a>
-                    </li>
+                    </li> -->
                     <li class="nav-item">
                         <a class="nav-link {{ request()->is('lich-su-don-hang') ? 'active' : '' }}" href="/lich-su-don-hang">Lịch sử đơn hàng</a>
                     </li>
@@ -139,6 +140,16 @@
                     </li> -->
                 </ul>
             </div>
+
+            <a class="nav-link d-flex align-items-center {{ request()->is('cart') ? 'active' : '' }}" href="{{ route('cart.index') }}">
+                @php
+                    $cart = session('cart', []);
+                    $totalQuantity = array_sum(array_column($cart, 'quantity'));
+                @endphp
+                <i class="fas fa-shopping-cart cart-icon"></i> 
+                @if($totalQuantity > 0)<span class="badge bg-success">{{ $totalQuantity }}</span>
+                @endif
+            </a>
         </div>
     </nav>
 
