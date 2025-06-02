@@ -68,7 +68,8 @@ class OrderController extends Controller
 
         $orderItems = OrderItem::where('order_id', $order->id)->get();
         // Gửi mail cho admin
-        Mail::to('truongthanhcong1909@gmail.com')->send(new OrderPlacedMail($order, $orderItems));
+        $adminEmail = env('ADMIN_EMAIL', 'truongthanhcong1909@gmail.com'); // fallback nếu chưa có biến env
+        Mail::to($adminEmail)->send(new OrderPlacedMail($order, $orderItems));
         
         return redirect()->route('orders.history')->with('success', 'Đặt hàng thành công! Chúng tôi sẽ liên hệ bạn sớm.');
     }

@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Thống kê')
+@section('title', 'Dashboard')
 
 @section('content')
 Welcome dashboard admin
