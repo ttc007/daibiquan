@@ -22,7 +22,7 @@
             <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
                 <div class="card h-100">
                     <div class="product-image">
-                        <img src="{{ asset($product->image ?? 'storage/default.png') }}" alt="{{ $product->name }}">
+                        <a href="{{route('product.show', $product->id)}}"><img src="{{ asset($product->image ?? 'storage/default.png') }}" alt="{{ $product->name }}"></a>
                     </div>
                     <div class="card-body">
                         <h5 class="card-title text-truncate" title="{{ $product->name }}">{{ $product->name }}</h5>

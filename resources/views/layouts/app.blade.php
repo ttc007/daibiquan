@@ -7,7 +7,6 @@
     <link rel="icon" href="{{ asset('favicon.png') }}" type="image/png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#007bff" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -28,6 +27,11 @@
             border-collapse: collapse;
         }
         .product-add-cart{
+            background: #4caf50;
+            border-color: #4caf50;
+        }
+
+        .btn-green {
             background: #4caf50;
             border-color: #4caf50;
         }

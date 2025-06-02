@@ -9,11 +9,6 @@
             width: 100px;
         }
 
-        .btn-green {
-            background: #4caf50;
-            border-color: #4caf50;
-        }
-
         .cart-footer {
             display: flex;
             justify-content: flex-end; /* Đẩy nội dung bên phải */
@@ -54,7 +49,7 @@
                             <td width="80">
                                 @if($item['image'])
                                     <div class="product-image">
-                                        <img src="{{ asset($item['image']) }}">
+                                        <a href="{{route('product.show', $id)}}"><img src="{{ asset($item['image']) }}"></a>
                                     </div>
                                 @else
                                     <div class="product-image">

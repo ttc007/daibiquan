@@ -6,6 +6,9 @@
         <div id="order-list">Đang tải đơn hàng...</div>
         <div id="pagination"></div>
     </div>
+    <form method="POST" action="" id="form-reorder" style="display:none;">
+        @csrf
+    </form>
 
     <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -56,10 +59,25 @@
             });
         }
 
+        function getStatusInfo(status) {
+            const statusMap = {
+                'Mới': { icon: '🆕', class: 'text-primary' },
+                'Đang xử lý': { icon: '🔄', class: 'text-warning' },
+                'Đang giao hàng': { icon: '🚚', class: 'text-info' },
+                'Đã nhận hàng': { icon: '📦', class: 'text-success' },
+                'Hoàn thành': { icon: '✅', class: 'text-success' },
+                'Hủy': { icon: '❌', class: 'text-danger' },
+            };
+
+            return statusMap[status] || { icon: '❓', class: 'text-secondary' };
+        }
+
+
         function renderOrders(orders) {
             const list = document.getElementById('order-list');
             list.innerHTML = orders.map(order => {
-                const statusClass = getStatusClass(order.status);
+                const { icon, class: statusClass } = getStatusInfo(order.status);
+
                 return `
                     <div class="order-card">
                         <h4>Đơn hàng #${order.id} - Thời gian đặt hàng: ${new Date(order.created_at).toLocaleString()}
@@ -69,7 +87,8 @@
                         <p><strong>Tên:</strong> ${order.name}</p>
                         <p><strong>Điện thoại:</strong> ${order.phone}</p>
                         <p><strong>Địa chỉ:</strong> ${order.address}</p>
-                        <p><strong>Trạng thái:</strong> <b class="${statusClass}">${order.status ?? 'Đang xử lý'}</b></p>
+                        <p><strong>Trạng thái:</strong> <b class="${statusClass}">${icon} ${order.status ?? 'Đang xử lý'}</b></p>
+
                         <p><strong>Chi tiết:</strong></p>
                         <div class="order-table-wrapper">
                             <table class="order-items-table">
@@ -87,7 +106,7 @@
                                         <tr>
                                             <td>
                                                 <div class="product-image">
-                                                    <img src='${item.product.image}' alt="${item.product_name}">
+                                                    <a href="/product/${item.product_id}"><img src='${item.product.image}' alt="${item.product_name}"></a>
                                                 </div>
                                             </td>
                                             <td>${item.product_name}</td>
@@ -101,11 +120,13 @@
                         </div>
                         <p><strong>Tổng tiền:</strong> ${Number(order.total_price).toLocaleString()}đ</p>
                         ${
-                          order.status === 'Mới' 
+                          order.status === 'Mới'
                             ? `<button onclick="cancelOrder(${order.id})" class="btn-cancel-order">Hủy đơn hàng</button>`
-                            : ['Đang xử lý', 'Đang giao hàng'].includes(order.status) 
-                              ? `Vui lòng nhấn vào nút "Đã nhận hàng" nếu bạn đã nhận được hàng <button onclick="confirmReceived(${order.id})" class="btn-confirm-received">Đã nhận hàng</button>`
-                              : ''
+                            : ['Đang giao hàng'].includes(order.status)
+                                ? `Vui lòng nhấn vào nút "Đã nhận hàng" nếu bạn đã nhận được hàng <button onclick="confirmReceived(${order.id})" class="btn-confirm-received">Đã nhận hàng</button>`
+                                : order.status === 'Hoàn thành'
+                                    ? `<button onclick="copyOrder(${order.id})" class="btn-copy-order">Đặt lại giống đơn này</button>`
+                                    : ''
                         }
 
 
@@ -125,6 +146,12 @@
             },
           })
           .then(() => location.reload());
+        }
+
+        function copyOrder(orderId) {
+            const form = document.getElementById('form-reorder');
+            form.action = '/reorder/' + orderId;
+            form.submit();
         }
 
         function confirmReceived(orderId) {
@@ -163,6 +190,7 @@
         }
 
         window.fetchOrders = fetchOrders;
+        window.copyOrder = copyOrder;
         window.confirmReceived = confirmReceived;
         window.cancelOrder = cancelOrder;
         fetchOrders();
@@ -190,6 +218,22 @@
         background-color: #d5d5d5;
     }
 
+    .btn-copy-order{
+        background-color: #42947c; /* xanh lá tươi */
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        font-size: 15px;
+        font-weight: bold;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    .btn-copy-order:hover {
+        background-color: #57a790;
+    }
+
     /* Nút Đã nhận hàng: nổi bật */
     .btn-confirm-received {
         background-color: #28a745; /* xanh lá tươi */
@@ -209,7 +253,7 @@
 
 
     .status-new {
-        color: #2e7d32; /* xanh đậm */
+        color: #295282; /* xanh đậm */
         font-weight: bold;
     }
     .status-processing {

@@ -39,6 +39,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 Route::get('/menu', [ProductController::class, 'index'])->name('menu');
 Route::get('/products/category/{id}', [ProductController::class, 'byCategory'])->name('products.byCategory');
+Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
+
 Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
@@ -48,7 +50,9 @@ Route::get('/cart/decrease/{id}', [CartController::class, 'decrease'])->name('ca
 
 Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
 Route::post('/checkout', [OrderController::class, 'placeOrder'])->name('checkout.placeOrder');
-Route::get('/lich-su-don-hang', [App\Http\Controllers\OrderController::class, 'history'])->name('orders.history');
+Route::get('/lich-su-don-hang', [OrderController::class, 'history'])->name('orders.history');
+Route::post('/reorder/{id}', [OrderController::class, 'reorder'])->name('orders.reorder');
+
 
 Route::prefix('api')->name('api.')->group(function () {
     Route::get('orders/history', [OrderApiController::class, 'history']);

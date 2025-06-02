@@ -22,4 +22,11 @@ class ProductController extends Controller
 
         return view('menu', compact('products', 'categories', 'category'));
     }
+
+    public function show($id)
+    {
+        $product = Product::findOrFail($id);
+
+        return view('product', compact('product'));
+    }
 }

@@ -78,4 +78,32 @@ class OrderController extends Controller
     {
         return view('order.history');
     }
+
+    public function reorder($id)
+    {
+        $order = Order::findOrFail($id);
+
+        $items = OrderItem::where('order_id', $order->id)->get();
+
+        $cart = [];
+
+        foreach ($items as $item) {
+            $product = $item->product;
+
+            // Kiểm tra nếu sản phẩm vẫn còn
+            if ($product) {
+                $cart[$product->id] = [
+                    'name' => $product->name,
+                    'quantity' => $item->quantity,
+                    'price' => $product->price,
+                    'image' => $product->image,
+                ];
+            }
+        }
+
+        session()->put('cart', $cart);
+
+        return redirect()->route('checkout.placeOrder')->with('success', 'Đã sao chép đơn hàng cũ vào giỏ để mua lại!');
+    }
+
 }
