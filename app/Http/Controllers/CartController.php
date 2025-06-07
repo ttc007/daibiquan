@@ -53,6 +53,9 @@ class CartController extends Controller
 
         session()->put('cart', $cart);
 
+        if ($request->has('redirect_to_checkout') && $request->input('redirect_to_checkout') == '1') {
+            return redirect()->route('checkout', ['type' => 'com_chay'])->with('success', 'Đã thêm vào giỏ hàng, chuyển đến thanh toán!');
+        }
         return redirect()->back()->with('success', 'Đã thêm vào giỏ hàng!');
     }
 

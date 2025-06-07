@@ -102,8 +102,8 @@
         /* Container pagination */
         .pagination {
           justify-content: center; /* canh giữa */
-          margin-top: 25px;
-          margin-bottom: 30px;
+          margin-top: 15px;
+          margin-bottom: 15px;
         }
 
         .nav-link svg, 

@@ -10,7 +10,7 @@
             <div class="row">
                 @foreach($quanChayProducts as $product)
                     <div class="col-12 col-sm-6 mb-4">
-                        @include('components.product_card', ['product' => $product])
+                        @include('components.food_card', ['product' => $product])
                     </div>
                 @endforeach
             </div>
