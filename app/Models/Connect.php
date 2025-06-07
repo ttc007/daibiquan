@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class FcmToken extends Model
+class Connect extends Model
 {
     protected $fillable = [
-        'user_id', 'token'
+        'customer_id', 'ip', 'created_at', 
     ];
 }

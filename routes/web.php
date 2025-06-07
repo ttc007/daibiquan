@@ -11,7 +11,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 
 use App\Http\Controllers\Api\OrderApiController;
-use App\Http\Controllers\Api\FcmTokenController;
+use App\Http\Controllers\Api\VisitController;
 
 Route::get('/', function () {
     return view('home');
@@ -62,6 +62,7 @@ Route::prefix('api')->name('api.')->group(function () {
     Route::post('/orders/{order}/cancel', [OrderApiController::class, 'cancel']);
     Route::post('/orders/{order}/received', [OrderApiController::class, 'received']);
 
-    Route::post('/fcm-token', [FcmTokenController::class, 'store']);
+    Route::post('/track-visit', [VisitController::class, 'track']);
+    Route::get('/visits', [VisitController::class, 'getVisitsByDate'])->name('visits');
 });
 

@@ -81,9 +81,9 @@
             <li class="nav-item">
               <a class="nav-link {{ request()->is('admin/products*') ? 'active' : '' }}" href="/admin/products">Sản phẩm</a>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <a class="nav-link {{ request()->is('admin/categories*') ? 'active' : '' }}" href="/admin/categories">Danh mục</a>
-            </li>
+            </li> -->
             <li class="nav-item">
               <a class="nav-link {{ request()->is('admin/orders*') ? 'active' : '' }}" href="/admin/orders">Đơn hàng</a>
             </li>

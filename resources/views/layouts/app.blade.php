@@ -102,7 +102,7 @@
         /* Container pagination */
         .pagination {
           justify-content: center; /* canh giữa */
-          margin-top: 30px;
+          margin-top: 25px;
           margin-bottom: 30px;
         }
 
@@ -210,6 +210,8 @@
             const randomId = 'cust_' + Math.random().toString(36).substr(2, 12);
             localStorage.setItem('customer_id', randomId);
         }
+
+        
     </script>
 
 </body>
