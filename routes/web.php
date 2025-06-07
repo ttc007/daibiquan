@@ -48,8 +48,9 @@ Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.
 Route::get('/cart/increase/{id}', [CartController::class, 'increase'])->name('cart.increase');
 Route::get('/cart/decrease/{id}', [CartController::class, 'decrease'])->name('cart.decrease');
 
-Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
-Route::post('/checkout', [OrderController::class, 'placeOrder'])->name('checkout.placeOrder');
+Route::get('/checkout/{type}', [OrderController::class, 'checkout'])->name('checkout');
+Route::post('/checkout/{type}', [OrderController::class, 'placeOrder'])->name('checkout.placeOrder');
+
 Route::get('/lich-su-don-hang', [OrderController::class, 'history'])->name('orders.history');
 Route::post('/reorder/{id}', [OrderController::class, 'reorder'])->name('orders.reorder');
 

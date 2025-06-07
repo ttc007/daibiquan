@@ -10,7 +10,21 @@ class CartController extends Controller
     public function index()
     {
         $cart = session()->get('cart', []);
-        return view('cart.index', compact('cart'));
+
+        $cartComChay = [];
+        $cartCuaHang = [];
+
+        foreach ($cart as $id => $item) {
+            $product = \App\Models\Product::find($id);
+
+            if ($product && $product->category_id == 1) {
+                $cartComChay[$id] = $item;
+            } elseif ($product && $product->category_id == 2) {
+                $cartCuaHang[$id] = $item;
+            }
+        }
+
+        return view('cart.index', compact('cartComChay', 'cartCuaHang'));
     }
 
     public function add(Request $request, $id)

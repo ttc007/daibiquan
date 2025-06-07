@@ -1,58 +1,47 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="mb-4">Menu Cơm Chay</h1>
+    <!-- <h1 class="mb-4">Menu Cơm Chay</h1> -->
 
-    <div class="category-scroll">
-        <a href="{{ route('menu') }}"
-           class="btn btn-sm {{ !isset($category) ? 'active' : '' }}">
-            Tất cả
-        </a>
-
-        @foreach ($categories as $cat)
-            <a href="{{ route('products.byCategory', $cat->id) }}"
-               class="btn btn-outline-primary btn-sm {{ isset($category) && $category->id == $cat->id ? 'active' : '' }}">
-                {{ $cat->name }}
-            </a>
-        @endforeach
-    </div>
-
-    <div class="row">
-        @foreach($products as $product)
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
-                <div class="card h-100">
-                    <div class="product-image">
-                        <a href="{{route('product.show', $product->id)}}"><img src="{{ asset($product->image ?? 'storage/default.png') }}" alt="{{ $product->name }}"></a>
+    <div class="row mt-3">
+        <!-- Quán chay Đại Bi -->
+        <div class="col-12 col-md-6 quanchay-container">
+            <h3>🌿Quán chay Đại Bi</h3>
+            <div class="row">
+                @foreach($quanChayProducts as $product)
+                    <div class="col-12 col-sm-6 mb-4">
+                        @include('components.product_card', ['product' => $product])
                     </div>
-                    <div class="card-body">
-                        <h5 class="card-title text-truncate" title="{{ $product->name }}">{{ $product->name }}</h5>
-                        <p class="card-text text-truncate">{{ $product->description }}</p>
-
-                        <form action="{{ route('cart.add', $product->id) }}" method="POST">
-                            @csrf
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <strong>{{ number_format($product->price, 0, ',', '.') }}đ</strong>
-                                <div class="input-group input-group-sm" style="width: 82px;">
-                                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="changeQuantity(this, -1)">−</button>
-                                    <input type="text" name="quantity" value="1" min="1" class="form-control text-center quantity-input"/>
-                                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="changeQuantity(this, 1)">+</button>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-success w-100 product-add-cart">Thêm vào giỏ</button>
-                        </form>
-
-
-                    </div>
-                </div>
+                @endforeach
             </div>
-        @endforeach
 
+            <div class="pagination">
+                {{ $quanChayProducts->links('vendor.pagination.bootstrap-5') }}
+            </div>
+        </div>
+
+
+
+        <!-- Cửa hàng Đại Bi -->
+        <div class="col-12 col-md-6 cuahang-container">
+            <h3>🛒Cửa hàng Đại Bi</h3>
+            <div class="row">
+                @foreach($cuaHangProducts as $product)
+                    <div class="col-12 col-sm-6 mb-4">
+                        @include('components.product_card', ['product' => $product])
+                    </div>
+                @endforeach
+            </div>
+
+            <div class="pagination">
+                {{ $cuaHangProducts->links('vendor.pagination.bootstrap-5') }}
+            </div>
+        </div>
     </div>
 
 
-    <div class="pagination">
-        {{ $products->links('vendor.pagination.bootstrap-5') }}
-    </div>
+
+    
 
     <script>
         function changeQuantity(button, delta) {
@@ -116,6 +105,16 @@
         .category-scroll::-webkit-scrollbar-thumb {
             background: #ccc;
             border-radius: 10px;
+        }
+
+        .quanchay-container{
+            background: #fafafa;
+            padding: 25px;
+        }
+
+        .cuahang-container{
+            background: #f1f1f1;
+            padding: 25px;
         }
     </style>
 

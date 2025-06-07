@@ -7,21 +7,30 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OrderPlacedMail;
+use App\Models\Product;
 
 class OrderController extends Controller
 {
-    // Hiển thị form checkout
-    public function checkout()
+    public function checkout($type)
     {
         $cart = session()->get('cart', []);
-        if (empty($cart)) {
-            return redirect()->route('cart.index')->with('error', 'Giỏ hàng đang trống!');
+
+        $filteredCart = [];
+        foreach ($cart as $id => $item) {
+            $product = Product::find($id);
+            if ($product && $type === 'com_chay' && $product->category_id == 1) {
+                $filteredCart[$id] = $item;
+            }
+            if ($product && $type === 'cua_hang' && $product->category_id == 2) {
+                $filteredCart[$id] = $item;
+            }
         }
-        return view('order.checkout', compact('cart'));
+
+        return view('order.checkout', compact('filteredCart', 'type'));
     }
 
     // Xử lý đặt hàng
-    public function placeOrder(Request $request)
+    public function placeOrder(Request $request, $type)
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -30,7 +39,18 @@ class OrderController extends Controller
             'customer_id' => 'nullable|string|max:255',
         ]);
 
-        $cart = session()->get('cart', []);
+        $fullCart = session()->get('cart', []);
+
+        $cart = [];
+        foreach ($fullCart as $id => $item) {
+            $product = Product::find($id);
+            if ($product && $type === 'com_chay' && $product->category_id == 1) {
+                $cart[$id] = $item;
+            }
+            if ($product && $type === 'cua_hang' && $product->category_id == 2) {
+                $cart[$id] = $item;
+            }
+        }
 
         if (empty($cart)) {
             return redirect()->route('cart.index')->with('error', 'Giỏ hàng đang trống!');
@@ -63,8 +83,11 @@ class OrderController extends Controller
             ]);
         }
 
-        // Ví dụ xóa giỏ hàng sau khi đặt
-        session()->forget('cart');
+        // Xóa phần giỏ hàng thuộc loại đó
+        foreach ($cart as $productId => $_) {
+            unset($fullCart[$productId]);
+        }
+        session()->put('cart', $fullCart);
 
         $orderItems = OrderItem::where('order_id', $order->id)->get();
         // Gửi mail cho admin

@@ -9,9 +9,9 @@
 </style>
 <h1>Thanh toán - Đặt hàng</h1>
 
-@if(count($cart) > 0)
+@if(count($filteredCart) > 0)
     <div class="cart-items mb-4">
-        <h2>Thông tin đơn hàng</h2>
+        <h2 class="text-success">{{ $type === 'com_chay' ? 'Quán chay Đại Bi' : 'Cửa hàng Đại Bi' }}</h2>
         <div class="order-table-wrapper">
             <table class="table table-bordered">
                 <thead>
@@ -24,7 +24,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($cart as $id => $item)
+                    @foreach($filteredCart as $id => $item)
                     <tr>
                         <td>{{ $item['name'] }}</td>
                         <td>
@@ -50,12 +50,12 @@
             Tổng cộng: 
             {{ number_format(array_sum(array_map(function($item) {
                 return $item['price'] * $item['quantity'];
-            }, $cart)), 0, ',', '.') }}đ
+            }, $filteredCart)), 0, ',', '.') }}đ
         </p>
     </div>
 
-    <h2>Thông tin giao hàng</h2>
-    <form action="{{ route('checkout.placeOrder') }}" method="POST">
+    <h2 class="text-success">Thông tin giao hàng</h2>
+    <form action="{{ route('checkout.placeOrder', ['type' => $type]) }}" method="POST">
         @csrf
         <input type="hidden" name="customer_id" id="customer_id">
         <script>
